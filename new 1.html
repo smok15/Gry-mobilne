@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+
+	<style>
+	#myCanvas{
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%, -50%);               
+	}
+	</style>
+
+	<body>
+	  <canvas id="myCanvas" width="800" height="600" style="border:1px solid #000000;">
+	  </canvas>
+	</body>
+	
+	<script>
+	
+	var c = document.getElementById("myCanvas");
+	var ctx= c.getContext('2d');
+	
+	var rectWidth = 200;
+	var rectHeight = 20;
+	var rectX = (c.width-rectWidth)/2;
+	var rectY = c.height-rectHeight;
+	var vel =12;
+
+	var radius = 10;
+	var ballX = 10;
+	var ballY  = 10;
+	var distance;
+	var moveX = 5;
+	var moveY = 5;
+	var counter=0; 
+	
+	function animate(){
+		ctx.clearRect(0,0, 800,600);
+		reqAnim= window.requestAnimationFrame(animate);
+		ballX +=moveX;
+		ballY +=moveY;
+		draw();
+	}
+	
+	function drawRect(){
+		ctx.beginPath();
+		ctx.rect(rectX,rectY,rectWidth,rectHeight);
+		ctx.fillStyle="black";
+		ctx.fill();
+		ctx.closePath();
+	}
+	
+	function drawBall(){
+		ctx.beginPath();
+		ctx.arc(ballX,ballY,radius,0,Math.PI*2,true);
+		ctx.fillStyle="red";
+		ctx.fill();
+		ctx.closePath();
+	}
+	
+	function draw(){
+		ctx.clearRect(0,0, 800,600);
+		drawBall();
+		drawRect();
+		collision();
+	}
+
+	function collision(){
+			if ( (ballY >= 600-(rectHeight+radius/2)) && (ballX>rectX && ballX < rectX+rectWidth)){
+				moveY= -moveY;
+				return true;
+			}
+			if (ballX >= 800-radius){
+				moveX = -moveX;
+			}
+			if (ballY <= radius){
+				moveY = -moveY;
+			}
+			if (ballX <= radius){
+				moveX = -moveX;
+			}
+			if(ballY > 600-radius/2){
+			window.alert("Przegrałeś");
+			}
+		}
+
+	document.addEventListener('keydown', function (e) {
+        switch (e.keyCode) {
+            case 37:
+				if(rectX>0)rectX-=vel;
+				draw();
+                break;
+            case 39:
+				if(rectX<800-rectWidth)rectX+=vel;
+				draw();
+        }
+    });
+
+
+	animate();
+	
+
+	</script>
+
+</html>
